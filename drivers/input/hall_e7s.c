@@ -12,7 +12,7 @@
 #include <linux/of_device.h>
 #include <linux/workqueue.h>
 #include <linux/mutex.h>
-#include <linux/regulator/consumer.h>        
+#include <linux/regulator/consumer.h>
 #include <linux/fb.h>
 #include <linux/moduleparam.h>
 
@@ -45,21 +45,22 @@ static irqreturn_t hall_interrupt(int irq, void *data)
 	int hall_gpio;
 	hall_gpio = gpio_get_value_cansleep(hall_info->irq_gpio);
 	pr_err("Macle hall irq interrupt gpio = %d\n", hall_gpio);
-	if(hall_gpio == hall_info->hall_switch_state){
+	if (hall_gpio == hall_info->hall_switch_state) {
 		return IRQ_HANDLED;
-	}else{
+	} else {
 		hall_info->hall_switch_state = hall_gpio;
 		pr_err("Macle hall report key s ");
 	}
+
 	if (hall_gpio) {
 			input_report_switch(hall_info->ipdev, SW_LID, 0);
 			input_sync(hall_info->ipdev);
-	}else{
+	} else {
 			input_report_switch(hall_info->ipdev, SW_LID, 1);
 			input_sync(hall_info->ipdev);
 	}
 
-        return IRQ_HANDLED;
+    return IRQ_HANDLED;
 }
 
 static int hall_parse_dt(struct device *dev, struct hall_switch_info *pdata)
@@ -222,7 +223,7 @@ static int hall_probe(struct platform_device *pdev)
 		goto free_input_device;
 	}
 
-       pr_err("hall_probe end\n");
+    pr_err("hall_probe end\n");
 #ifdef CONFIG_HALL_SYS
 	hall_register_class_dev(hall_info);
 #endif
@@ -277,14 +278,12 @@ static struct platform_driver hall_driver = {
 static int __init hall_init(void)
 {
 	return platform_driver_register(&hall_driver);
-
 }
 
 static void __exit hall_exit(void)
 {
 	platform_driver_unregister(&hall_driver);
 }
-
 
 module_init(hall_init);
 module_exit(hall_exit);
