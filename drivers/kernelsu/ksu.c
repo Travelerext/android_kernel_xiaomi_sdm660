@@ -1,4 +1,3 @@
-#include "linux/export.h"
 #include <asm-generic/errno-base.h>
 #include <linux/cpu.h>
 #include <linux/cred.h>
@@ -307,11 +306,7 @@ int __init kernelsu_init(void)
 	pr_alert("You are running DEBUG version of KernelSU");
 #endif
 
-#ifndef MODULE
-	ksu_lsm_hook_init();
-#else
-	ksu_kprobe_init();
-#endif
+	ksu_lsm_hook_init(); // use ksu_kprobe_init if compiled as module
 
 	ksu_workqueue = alloc_workqueue("kernelsu_work_queue", 0, 0);
 
@@ -319,11 +314,7 @@ int __init kernelsu_init(void)
 
 	ksu_uid_observer_init();
 
-#ifdef CONFIG_KPROBES
 	enable_sucompat();
-#else
-#warning("KPROBES is disabled, KernelSU may not work, please check https://kernelsu.org/guide/how-to-integrate-for-non-gki.html")
-#endif
 
 	return 0;
 }
@@ -338,9 +329,13 @@ void kernelsu_exit(void)
 module_init(kernelsu_init);
 module_exit(kernelsu_exit);
 
+#ifndef CONFIG_KPROBES
+#error("`CONFIG_KPROBES` must be enabled for KernelSU!")
+#endif
+
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("weishu");
-MODULE_DESCRIPTION("Android KernelSU");
+MODULE_DESCRIPTION("Android GKI KernelSU");
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 0, 0)
 MODULE_IMPORT_NS(

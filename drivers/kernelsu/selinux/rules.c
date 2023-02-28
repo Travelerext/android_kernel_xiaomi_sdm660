@@ -11,7 +11,6 @@
 #endif
 
 #define KERNEL_SU_DOMAIN "su"
-#define KERNEL_SU_FILE "ksu_file"
 #define ALL NULL
 
 void apply_kernelsu_rules()
@@ -36,11 +35,6 @@ void apply_kernelsu_rules()
 	ksu_typeattribute(db, KERNEL_SU_DOMAIN, "mlstrustedsubject");
 	ksu_typeattribute(db, KERNEL_SU_DOMAIN, "netdomain");
 	ksu_typeattribute(db, KERNEL_SU_DOMAIN, "bluetoothdomain");
-
-    // Create unconstrained file type
-    ksu_type(db, KERNEL_SU_FILE, "file_type");
-    ksu_typeattribute(db, KERNEL_SU_FILE, "mlstrustedobject");
-    ksu_allow(db, ALL, KERNEL_SU_FILE, ALL, ALL);
 
 	// allow all!
 	ksu_allow(db, KERNEL_SU_DOMAIN, ALL, ALL, ALL);
