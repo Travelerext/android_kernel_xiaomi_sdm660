@@ -3,11 +3,6 @@
 
 #include <linux/types.h>
 
-#ifndef CONFIG_KSU_BACKPORT
-#define HAVE_SELINUX_STATE
-#define HAVE_CURRENT_SID
-#endif
-
 void setup_selinux();
 
 void setenforce(bool);
